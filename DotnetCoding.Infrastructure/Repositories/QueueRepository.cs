@@ -16,5 +16,27 @@ namespace DotnetCoding.Infrastructure.Repositories
         {
             return await _context.ApprovalQueue.OrderBy(q => q.RequestDate).Include(q => q.Product).ToListAsync();
         }
+        public async Task Approve(int id)
+        {
+            var approvalRequest = await _context.ApprovalQueue.FindAsync(id);
+            if (approvalRequest != null)
+            {
+                // Approve logic
+                approvalRequest.Product.ProductStatus = "Approved";
+                _context.ApprovalQueue.Remove(approvalRequest);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task RejectAsync(int id)
+        {
+            var approvalRequest = await _context.ApprovalQueue.FindAsync(id);
+            if (approvalRequest != null)
+            {
+                // Reject logic
+                approvalRequest.Product.ProductStatus = "Rejected";
+                _context.ApprovalQueue.Remove(approvalRequest);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

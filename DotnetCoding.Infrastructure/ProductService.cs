@@ -31,23 +31,23 @@ namespace DotnetCoding.Infrastructure
         {
             return await _unitOfWork.ApprovalQueues.GetApprovalQueue();
         }
-        public async Task<IEnumerable<ProductDetails>> GetActiveProducts(string name, decimal? minPrice, decimal? maxPrice, DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<ProductDetails>> GetActiveProducts(string name = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var query = (IQueryable<ProductDetails>)_dbContext.Products.Where(p => p.Active).OrderByDescending(p => p.CreatedAt);
 
             if (!string.IsNullOrEmpty(name))
                 query = query.Where(p => p.ProductName.Contains(name));
 
-            if (minPrice.HasValue)
+            if (minPrice != null && minPrice.HasValue)
                 query = query.Where(p => p.ProductPrice >= minPrice.Value);
 
-            if (maxPrice.HasValue)
+            if (maxPrice != null && maxPrice.HasValue)
                 query = query.Where(p => p.ProductPrice <= maxPrice.Value);
 
-            if (startDate.HasValue)
+            if (startDate != null && startDate.HasValue)
                 query = query.Where(p => p.CreatedAt >= startDate.Value);
 
-            if (endDate.HasValue)
+            if (endDate != null && endDate.HasValue)
                 query = query.Where(p => p.CreatedAt <= endDate.Value);
 
             return await query.ToListAsync();
