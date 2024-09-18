@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DotnetCoding.Core.Models;
-using DotnetCoding.Services.Interfaces;
+using DotnetCoding.Infrastructure.Interfaces;
 
 namespace DotnetCoding.Controllers
 {
@@ -28,12 +28,13 @@ namespace DotnetCoding.Controllers
             }
             return Ok(productDetailsList);
         }
-        [HttpGet("approvalQueue")]
-        public async Task<IActionResult> GetApprovalQueue()
+        [HttpGet]
+        public async Task<IActionResult> GetProduct(string name = null, decimal? minPrice = null, decimal? maxPrice = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var approvalQueue = await _productService.GetApprovalQueue();
-            return Ok(approvalQueue);
+            var products = await _productService.GetActiveProducts(name, minPrice, maxPrice, startDate, endDate);
+            return Ok(products);
         }
+        
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductDetails product)
         {
