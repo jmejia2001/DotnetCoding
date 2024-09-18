@@ -11,13 +11,15 @@ namespace DotnetCoding.Infrastructure.Repositories
     {
         private readonly DbContextClass _dbContext;
         public IProductRepository Products { get; }
+        public IQueueRepository ApprovalQueues { get; }
 
         public UnitOfWork(DbContextClass dbContext,
-                            IProductRepository productRepository)
+                            IProductRepository productRepository, IQueueRepository approvalQueues)
         {
             _dbContext = dbContext;
             Products = productRepository;
-          
+            ApprovalQueues = approvalQueues;
+
         }
 
         public async Task Save()
